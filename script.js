@@ -20,10 +20,18 @@ function appendToDisplay(value) {
         display.value = value;
     } else if (currentvalue === "0" && value === "."){
        display.value = currentvalue + value; 
+    } else if (value === '.') {
+        //Get the last number in the display
+        let lastNumber = currentvalue.split("[/-+*/\]").pop();
+        //Only add the decimal if the current number doesn't have it
+        if (!lastNumber.includes('.')) {
+            display.value = currentvalue + value
+        }
+
     } else {
         display.value = currentvalue + value;
     }
-
+ 
     //Reset the justCalculated flag when user starts typing
     justCalculated = false
 
@@ -31,13 +39,21 @@ function appendToDisplay(value) {
 
     // if the current display shows 0 and user enters decimal, keep the 0
     
-    alert('You pressed: ' + value);
+    
 }
 
 function clearDisplay() {
     console.log("Clear button was clicked.");
 
-    alert('Clear button was clicked');
+    display.value = "0";
+    justCalculated = false;
+
+    display.style.backgroundColor = "#f0f0f0";
+    setTimeout(() => {
+        display.style.backgroundColor = '';
+    }, 150);
+
+   
 }
 
 function deleteLast() {
@@ -62,6 +78,37 @@ function calculate() {
     alert('Equals button was clicked');
     
 }
+
+document.addEventListener("keydown", function(event) {
+    console.log("key pressed", event.key);
+
+    if (event.key >= "0" && event.key <= '9') {
+        appendToDisplay(event.key);
+    } else if (event.key === '.') {
+        appendToDisplay('.');
+    } else if (event.key === '+') {
+        appendToDisplay('+');
+    } else if (event.key === '-') {
+        appendToDisplay('-');
+    } else if (event.key === '-') {
+        appendToDisplay('-');    
+    } else if (event.key === '/') {
+        event.preventDefault();
+        appendToDisplay('/');      
+    } else if (event.key === '*') {
+        appendToDisplay('*');   
+    }           
+
+// Other character
+    else if (event.key === 'Enter' || event.key === '=') {
+        calculate();
+    } else if (event.key === 'Escape' || event.key === "c" || event.key === 'C') {
+        clearDisplay();
+    } else if (event.key === 'Backspace') {
+        deleteLast();
+    }
+
+})
 
 document.addEventListener('DOMContentLoaded', function() {
     console.log("Calculator loaded succesfully");
